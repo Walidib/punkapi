@@ -1,0 +1,9 @@
+api_styling:
+  version: 1.x
+  css:
+    theme:
+      css/api_styling.css: {}
+  js:
+    js/api_styling.js: {}
+  dependencies:
+    - core/jquery

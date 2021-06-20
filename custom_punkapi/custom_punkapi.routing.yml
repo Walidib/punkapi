@@ -1,0 +1,17 @@
+custom_punkapi.modify_data:
+  path: '/admin/config/beers-data'
+  defaults:
+    _form: '\Drupal\custom_punkapi\Form\BeersData'
+    _title: 'View and edit beers data'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+custom_punkapi.beers_api:
+  path: '/api/beers'
+  defaults:
+    _controller: '\Drupal\custom_punkapi\Controller\GetBeers::getBeers'
+    _title: 'Beers Api'
+  requirements:
+    _permission: 'access administration pages'

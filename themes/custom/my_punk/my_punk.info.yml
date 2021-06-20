@@ -1,0 +1,10 @@
+core_version_requirement: ^9
+type: theme
+
+name: 'My Punk theme'
+description: 'My Punk theme site'
+package: 'my_punk'
+base theme: stable
+
+libraries:
+  - 'my_punk/global-styling'

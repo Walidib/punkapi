@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Implementing some hook functions
+ */
+use Drupal\custom_punkapi\Controller\GetBeers;
+
+/**
+ * Implements hook_theme().
+ */
+function custom_punkapi_theme($existing, $type, $theme, $path) {
+  return [
+    'api_results' => [
+      'variables' => ['list_beer' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function custom_punkapi_views_data() {
+  // Define the return array.
+  $data = [];
+
+  // be the same as the hook_schema() table names.
+  $data['beers'] = [];
+  $data['beers']['table'] = [];
+
+  // Within 'table', the value of 'group' (translated string) is used as a
+  // prefix in Views UI for this table's fields, filters, etc. When adding
+  // a field, filter, etc. you can also filter by the group.
+  $data['beers']['table']['group'] = t('Beers table');
+
+  // set the 'provider' is the module that provides schema to ensure we have the correct dependencies
+  $data['beers']['table']['provider'] = 'custom_punkapi';
+
+  // define table as a base table, add key 'base' to the 'table' array:
+  $data['beers']['table']['base'] = [
+    // Identifier (primary) field in this table for Views.
+    'field' => 'id',
+    // Label in the UI.
+    'title' => t('Beers'),
+    // Longer description in the UI. Required.
+    'help' => t('Beers table contains beer content.'),
+    'weight' => -10,
+  ];
+
+  $data['beers']['id'] = array(
+    'title' => t('Beer id'),
+    'help' => t('Displays the beer id'),
+  );
+
+  // Plain text field beer name, exposed as a field, sort, filter, and argument.
+  $data['beers']['name'] = array(
+    'title' => t('Name of beers'),
+    'help' => t('Just the name of beers.'),
+    'field' => array(
+      // ID of field handler plugin to use.
+      'id' => 'standard',
+    ),
+    'sort' => array(
+      // ID of sort handler plugin to use.
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'string',
+    ),
+    'argument' => array(
+      // ID of argument handler plugin to use.
+      'id' => 'string',
+    ),
+  );
+
+  // Plain text field beer ingredients, exposed as a field, sort, filter, and argument.
+  $data['beers']['ingredients'] = array(
+    'title' => t('Ingredients of beers'),
+    'help' => t('Just the ingredients of beers.'),
+    'field' => array(
+      // ID of field handler plugin to use.
+      'id' => 'standard',
+    ),
+    'sort' => array(
+      // ID of sort handler plugin to use.
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'string',
+    ),
+    'argument' => array(
+      // ID of argument handler plugin to use.
+      'id' => 'string',
+    ),
+  );
+
+  // Integer timestamp field, exposed as a field, sort, and filter.
+  $data['beers']['date_brewed'] = array(
+    'title' => t('Brewed date'),
+    'help' => t('Date when the beer was brewed.'),
+    'field' => array(
+      // ID of field handler plugin to use.
+      'id' => 'date',
+    ),
+    'sort' => array(
+      // ID of sort handler plugin to use.
+      'id' => 'date',
+    ),
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'date',
+    ),
+  );
+
+
+  // in case "option 1 was adopted" here is a snippet of how to create relationships in hook_views_data,
+  // this code is not tested
+  /*$data['beers']['table']['join'] = [
+    'ingredients' => [
+      // Primary key field in ingredient to use in the join.
+      'left_field' => 'id_beer',
+      // Foreign key field in beers to use in the join.
+      'field' => 'id',
+    ],
+  ];*/
+
+  return $data;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function custom_punkapi_cron(){
+  $beers = new GetBeers;
+  $added_beers = $beers->getBeers();
+  
+  // we can here use the drupal mail service to send mails of the api result
+  // $mailManager = \Drupal::service('plugin.manager.mail');
+  // $result = $mailManager->mail($module,$mail_key, $to, $params['langcode'], $params, NULL, $send);
+}
